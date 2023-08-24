@@ -1,18 +1,22 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const userRoutes = require('./Routes/userRoutes.js')
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 dotenv.config({ path: "./src/config/config.env" });
 
-
-
 // routing
+app.use("/api/user", userRoutes);
+
 app.get("/", (req, res) => {
   res.send("Grow Simplee API");
 });
