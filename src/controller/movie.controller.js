@@ -26,7 +26,7 @@ const getMovieRating = async (req, res) => {
         message: "could not find the movie's rating",
       });
     }
-    return res.json({ data: movie.vote_average });
+    return res.status(200).json({ data: movie.vote_average.toString() });
   } catch (err) {
     console.log(err);
     return res.status(402).json({
@@ -52,7 +52,7 @@ const addRating = async (req, res) => {
     const isRated = user.movieRatedByUser.includes(movieId);
 
     if(isRated) {
-        return res.json({ message: "already rated by user."})
+        return res.status(200).json({ data: movie, message: "already rated by user."})
     }
 
     const newRating =
@@ -65,7 +65,7 @@ const addRating = async (req, res) => {
 
     await movie.save();
 
-    return res.json({ data: movie });
+    return res.status(200).json({ data: movie });
   } catch (err) {
     console.log(err);
     return res.status(402).json({

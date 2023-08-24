@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const Token = require("../models/token.model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt")
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -17,17 +18,18 @@ const userLogin = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+    let flag = await bcrypt.compare(password, user.password)
+    console.log("user", user, flag)
 
-    if (user && (await user.matchPassword(password))) {
-      return res
-        .json({
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          isAdmin: user.isAdmin,
-          token: generateToken(user._id),
-        })
-        .status(200);
+
+    if (user && flag) {
+      return res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      });
     } else {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -42,13 +44,16 @@ const userSignup = async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(200).json({ message: "User already exists" });
     }
+
+    const salt = await bcrypt.genSalt(6)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
     const user = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
     const generatedToken = generateToken(user._id);
@@ -58,7 +63,7 @@ const userSignup = async (req, res) => {
     });
 
     if (user) {
-      return res.status(201).json({
+      return res.status(200).json({
         _id: user._id,
         name: user.name,
         email: user.email,
