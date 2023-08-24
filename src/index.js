@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const userRoutes = require('./Routes/userRoutes.js')
+const movieRoutes = require('./Routes/movieRoutes.js')
 
 const app = express();
 const PORT = 3000;
@@ -16,6 +17,7 @@ dotenv.config({ path: "./src/config/config.env" });
 
 // routing
 app.use("/api/user", userRoutes);
+app.use("/api/movie", movieRoutes);
 
 app.get("/", (req, res) => {
   res.send("Grow Simplee API");
