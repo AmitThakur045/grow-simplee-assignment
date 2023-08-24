@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
       next();
     } catch (error) {
       console.error(error);
-      res.status(401).json({ message: "An eror occured" });
+      res.status(400).json({ message: "An eror occured" });
     }
   }
 

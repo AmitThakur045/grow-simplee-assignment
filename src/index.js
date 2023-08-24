@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const userRoutes = require('./Routes/userRoutes.js')
 const movieRoutes = require('./Routes/movieRoutes.js')
+const swaggerUI = require("swagger-ui-express");
+const docs = require('./docs/index.js');
 
 const app = express();
 const PORT = 3000;
@@ -16,6 +18,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 dotenv.config({ path: "./src/config/config.env" });
 
 // routing
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(docs));
 app.use("/api/user", userRoutes);
 app.use("/api/movie", movieRoutes);
 

@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 
 const getAllMovieDetails = async (req, res) => {
   try {
+    console.log("getAll movies")
     const movies = await Movie.find();
     return res.status(200).json({
       data: movies,

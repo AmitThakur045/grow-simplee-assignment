@@ -29,7 +29,18 @@ describe("POST /api/user/login", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.token.length).toBeGreaterThan(0);
   });
+
+  it("should return a token", async () => {
+    const res = await request(app).post("/api/user/login").send({
+      email: "test@gmail.com",
+      password: "2222444",
+    });
+    expect(res.statusCode).toBe(401);
+    expect(res.body.message.length).toBeGreaterThan(0);
+  });
+  
 });
+
 
 // sign up
 describe("POST /api/user/signup", () => {
