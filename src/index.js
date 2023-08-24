@@ -1,17 +1,28 @@
-const express = require('express');
-  
+const express = require("express");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+
 const app = express();
 const PORT = 3000;
-  
+
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
+
+dotenv.config({ path: "./src/config/config.env" });
+
+
 
 // routing
+app.get("/", (req, res) => {
+  res.send("Grow Simplee API");
+});
 
-app.listen(PORT, (error) =>{
-    if(!error)
-        console.log("Server is Successfully Running, and App is listening on port "+ PORT)
-    else 
-        console.log("Error occurred, server can't start", error);
-    }
-);
+mongoose
+  .connect(process.env.CONNECTION_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() =>
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+  )
+  .catch((error) => console.log("MongoDB Error", error.message));
